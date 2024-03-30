@@ -9,7 +9,6 @@ import { DataTable } from "primereact/datatable";
 const statusList = ["Todo", "In Progress", "Overdue", "Completed"];
 
 import Authorized from "../components/Authorized";
-import { useNavigate } from "react-router-dom";
 
 const TASKS = [
   {
@@ -56,8 +55,6 @@ const TASKS = [
 
 const MyTasksPage = () => {
   const [tasks] = useState(TASKS);
-
-  const navigate = useNavigate();
 
   const renderDate = (date) => {
     return dayjs(date).format("MMM DD, YYYY");
@@ -117,19 +114,11 @@ const MyTasksPage = () => {
     rowData[field] = newValue;
   };
 
-  const openAddTaskPage = () => {
-    navigate("/my-tasks/new");
-  };
-
   return (
     <>
       <Authorized>
         <div className="self-end">
-          <Button
-            onClick={openAddTaskPage}
-            label="Add Task"
-            icon="pi pi-plus"
-          ></Button>
+          <Button label="Add Task" icon="pi pi-plus"></Button>
         </div>
         <DataTable
           showGridlines
