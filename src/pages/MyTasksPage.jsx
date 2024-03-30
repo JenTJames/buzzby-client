@@ -9,6 +9,7 @@ import { DataTable } from "primereact/datatable";
 const statusList = ["Todo", "In Progress", "Overdue", "Completed"];
 
 import Authorized from "../components/Authorized";
+import { useNavigate } from "react-router-dom";
 
 const TASKS = [
   {
@@ -16,12 +17,18 @@ const TASKS = [
     description: "Create the folder structure for the new project",
     status: "TODO",
     createdOn: dayjs(),
+    assignedBy: "John Doe",
+    createdBy: "John Doe",
+    priority: "HIGH",
     expectedCompletionDate: dayjs().add(5, "d"),
   },
   {
     id: "3003A0000002",
     description: "Create components needed for the project",
     status: "TODO",
+    assignedBy: "John Doe",
+    createdBy: "John Doe",
+    priority: "MEDIUM",
     createdOn: dayjs(),
     expectedCompletionDate: dayjs().add(5, "d"),
   },
@@ -29,6 +36,9 @@ const TASKS = [
     id: "3003A0000003",
     description: "Divide work",
     status: "TODO",
+    assignedBy: "John Doe",
+    createdBy: "John Doe",
+    priority: "HIGH",
     createdOn: dayjs(),
     expectedCompletionDate: dayjs().add(5, "d"),
   },
@@ -36,6 +46,9 @@ const TASKS = [
     id: "3003A0000004",
     description: "Update Project Tracker",
     status: "TODO",
+    createdBy: "John Doe",
+    assignedBy: "John Doe",
+    priority: "LOW",
     createdOn: dayjs(),
     expectedCompletionDate: dayjs().add(5, "d"),
   },
@@ -43,6 +56,8 @@ const TASKS = [
 
 const MyTasksPage = () => {
   const [tasks] = useState(TASKS);
+
+  const navigate = useNavigate();
 
   const renderDate = (date) => {
     return dayjs(date).format("MMM DD, YYYY");
@@ -63,6 +78,12 @@ const MyTasksPage = () => {
       default:
         return <Tag value="Unknown" severity="secondary" />;
     }
+  };
+
+  const renderPriority = (priority) => {
+    if (priority === "HIGH") return <Tag value="High" severity="danger" />;
+    if (priority === "MEDIUM") return <Tag value="Medium" severity="warning" />;
+    return <Tag value="Low" severity="success" />;
   };
 
   const getSeverity = (status) => {
@@ -96,11 +117,19 @@ const MyTasksPage = () => {
     rowData[field] = newValue;
   };
 
+  const openAddTaskPage = () => {
+    navigate("/my-tasks/new");
+  };
+
   return (
     <>
       <Authorized>
         <div className="self-end">
-          <Button label="Add Task" icon="pi pi-plus"></Button>
+          <Button
+            onClick={openAddTaskPage}
+            label="Add Task"
+            icon="pi pi-plus"
+          ></Button>
         </div>
         <DataTable
           showGridlines
@@ -116,6 +145,14 @@ const MyTasksPage = () => {
         >
           <Column sortable field="id" header="Task ID"></Column>
           <Column field="description" header="Description"></Column>
+          <Column
+            field="priority"
+            sortable
+            header="Priority"
+            body={({ priority }) => renderPriority(priority)}
+          ></Column>
+          <Column field="createdBy" header="Created By"></Column>
+          <Column field="assignedBy" header="Assigned By"></Column>
           <Column
             sortable
             field="createdOn"
