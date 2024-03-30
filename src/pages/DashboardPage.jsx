@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
+import { Tag } from "primereact/tag";
 import { Card } from "primereact/card";
 import { Knob } from "primereact/knob";
 import { Chart } from "primereact/chart";
 import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { DataTable } from "primereact/datatable";
-import { Tag } from "primereact/tag";
 
 import Authorized from "../components/Authorized";
 
