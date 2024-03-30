@@ -6,7 +6,7 @@ const Authorized = ({ children }) => {
   return (
     <div className="min-w-full min-h-screen flex">
       <Sidebar />
-      <div className="flex flex-col gap-3 p-5">{children}</div>
+      <div className="flex flex-col gap-3 p-5 flex-1">{children}</div>
     </div>
   );
 };
