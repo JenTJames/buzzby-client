@@ -34,7 +34,7 @@ const NAVLINKS = [
 
 const Sidebar = () => {
   return (
-    <div className="h-screen sticky top-0 w-72 flex flex-col border-r">
+    <div className="h-screen sticky top-0 left-0 w-72 flex flex-col border-r">
       <div className="flex-0">
         <div className="flex justify-between items-center p-5">
           <Brand />
