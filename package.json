@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chart.js": "^4.4.2",
+    "chartjs": "^0.3.24",
     "primeicons": "^6.0.1",
     "primereact": "^10.5.3",
+    "quill": "^1.3.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.2",
