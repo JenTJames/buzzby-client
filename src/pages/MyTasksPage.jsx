@@ -8,6 +8,8 @@ import { DataTable } from "primereact/datatable";
 
 const statusList = ["Todo", "In Progress", "Overdue", "Completed"];
 
+const priorityList = ["High", "Medium", "Low"];
+
 import Authorized from "../components/Authorized";
 
 const TASKS = [
@@ -93,10 +95,28 @@ const MyTasksPage = () => {
         return "success";
       case "Overdue":
         return "danger";
+      case "High":
+        return "danger";
+      case "Medium":
+        return "warning";
+      case "Low":
+        return "success";
       default:
         return "secondary";
     }
   };
+
+  const priorityEditor = (options) => (
+    <Dropdown
+      value={options.value}
+      options={priorityList}
+      onChange={(e) => options.editorCallback(e.value)}
+      placeholder="Select a priority"
+      itemTemplate={(option) => {
+        return <Tag value={option} severity={getSeverity(option)}></Tag>;
+      }}
+    />
+  );
 
   const statusEditor = (options) => (
     <Dropdown
@@ -109,6 +129,10 @@ const MyTasksPage = () => {
       }}
     />
   );
+
+  const updatePriorityHandler = ({ rowData, newValue, field }) => {
+    rowData[field] = newValue.toUpperCase();
+  };
 
   const updateStatusHandler = ({ rowData, newValue, field }) => {
     rowData[field] = newValue;
@@ -139,6 +163,8 @@ const MyTasksPage = () => {
             sortable
             header="Priority"
             body={({ priority }) => renderPriority(priority)}
+            editor={priorityEditor}
+            onCellEditComplete={updatePriorityHandler}
           ></Column>
           <Column field="createdBy" header="Created By"></Column>
           <Column field="assignedBy" header="Assigned By"></Column>
