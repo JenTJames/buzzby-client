@@ -6,8 +6,6 @@ import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { DataTable } from "primereact/datatable";
 
-const statusList = ["Todo", "In Progress", "Overdue", "Completed"];
-
 const priorityList = ["High", "Medium", "Low"];
 
 import Authorized from "../components/Authorized";
@@ -16,7 +14,7 @@ const TASKS = [
   {
     id: "3003A0000001",
     description: "Create the folder structure for the new project",
-    status: "TODO",
+    status: "ACTIVE",
     createdOn: dayjs(),
     assignedBy: "John Doe",
     createdBy: "John Doe",
@@ -26,7 +24,7 @@ const TASKS = [
   {
     id: "3003A0000002",
     description: "Create components needed for the project",
-    status: "TODO",
+    status: "COMPLETED",
     assignedBy: "John Doe",
     createdBy: "John Doe",
     priority: "MEDIUM",
@@ -36,7 +34,7 @@ const TASKS = [
   {
     id: "3003A0000003",
     description: "Divide work",
-    status: "TODO",
+    status: "COMPLETED",
     assignedBy: "John Doe",
     createdBy: "John Doe",
     priority: "HIGH",
@@ -46,7 +44,7 @@ const TASKS = [
   {
     id: "3003A0000004",
     description: "Update Project Tracker",
-    status: "TODO",
+    status: "COMPLETED",
     createdBy: "John Doe",
     assignedBy: "John Doe",
     priority: "LOW",
@@ -56,7 +54,7 @@ const TASKS = [
 ];
 
 const MyTasksPage = () => {
-  const [tasks] = useState(TASKS);
+  const [tasks, setTasks] = useState(TASKS);
 
   const renderDate = (date) => {
     return dayjs(date).format("MMM DD, YYYY");
@@ -64,16 +62,14 @@ const MyTasksPage = () => {
 
   const renderStatus = ({ status }) => {
     switch (status.toLowerCase()) {
-      case "todo":
-        return <Tag value="Todo" severity="info" />;
-      case "in_progress":
-        return <Tag value="In Progress" severity="warning" />;
-      case "in progress":
-        return <Tag value="In Progress" severity="warning" />;
+      case "active":
+        return <Tag icon="pi pi-info-circle" value="Active" severity="info" />;
+      case "paused":
+        return <Tag icon="pi pi-pause" value="Paused" severity="warning" />;
       case "completed":
-        return <Tag value="Completed" severity="success" />;
-      case "overdue":
-        return <Tag value="Overdue" severity="danger" />;
+        return (
+          <Tag icon="pi pi-check-circle" value="Completed" severity="success" />
+        );
       default:
         return <Tag value="Unknown" severity="secondary" />;
     }
@@ -87,14 +83,12 @@ const MyTasksPage = () => {
 
   const getSeverity = (status) => {
     switch (status) {
-      case "Todo":
+      case "Active":
         return "info";
-      case "In Progress":
+      case "Paused":
         return "warning";
       case "Completed":
         return "success";
-      case "Overdue":
-        return "danger";
       case "High":
         return "danger";
       case "Medium":
@@ -118,53 +112,99 @@ const MyTasksPage = () => {
     />
   );
 
-  const statusEditor = (options) => (
-    <Dropdown
-      value={options.value}
-      options={statusList}
-      onChange={(e) => options.editorCallback(e.value)}
-      placeholder="Select a Status"
-      itemTemplate={(option) => {
-        return <Tag value={option} severity={getSeverity(option)}></Tag>;
-      }}
-    />
-  );
-
   const updatePriorityHandler = ({ rowData, newValue, field }) => {
     rowData[field] = newValue.toUpperCase();
-  };
-
-  const updateStatusHandler = ({ rowData, newValue, field }) => {
-    rowData[field] = newValue;
   };
 
   const loadAuditTrail = (taskId) => {
     alert(taskId);
   };
 
-  const renderActionCell = ({ id: taskId }) => {
+  const pauseTaskHandler = (taskId) => {
+    setTasks((currentState) => {
+      const tempTasks = [...currentState];
+      const taskIndex = tempTasks.findIndex((task) => task.id === taskId);
+      tempTasks[taskIndex].status = "PAUSED";
+      return tempTasks;
+    });
+  };
+
+  const resumeTaskHandler = (taskId) => {
+    setTasks((currentState) => {
+      const tempTasks = [...currentState];
+      const taskIndex = tempTasks.findIndex((task) => task.id === taskId);
+      tempTasks[taskIndex].status = "ACTIVE";
+      return tempTasks;
+    });
+  };
+
+  const renderActionCell = ({ id: taskId, status: taskStatus }) => {
     return (
-      <Button
-        tooltip="Audit Trail"
-        tooltipOptions={{
-          position: "left",
-        }}
-        onClick={() => loadAuditTrail(taskId)}
-        className="block m-auto"
-        severity="secondary"
-        outlined
-        rounded
-        text
-        icon="pi pi-history"
-      />
+      <div className="flex">
+        {taskStatus.toLowerCase() === "active" && (
+          <Button
+            tooltip="Pause Task"
+            tooltipOptions={{
+              position: "left",
+            }}
+            onClick={() => pauseTaskHandler(taskId)}
+            className="block m-auto"
+            severity="warning"
+            outlined
+            rounded
+            text
+            size="small"
+            icon="pi pi-pause"
+          />
+        )}
+        {taskStatus.toLowerCase() === "paused" && (
+          <Button
+            tooltip="Resume Task"
+            tooltipOptions={{
+              position: "left",
+            }}
+            onClick={() => resumeTaskHandler(taskId)}
+            className="block m-auto"
+            severity="success"
+            outlined
+            rounded
+            text
+            size="small"
+            icon="pi pi-play"
+          />
+        )}
+        <Button
+          tooltip="Audit Trail"
+          tooltipOptions={{
+            position: "left",
+          }}
+          onClick={() => loadAuditTrail(taskId)}
+          className="block m-auto"
+          severity="secondary"
+          outlined
+          rounded
+          text
+          icon="pi pi-history"
+        />
+      </div>
     );
   };
 
   return (
     <>
       <Authorized>
-        <div className="self-end">
-          <Button label="Add Task" icon="pi pi-plus"></Button>
+        <div className="flex justify-between">
+          <div className="float-start">
+            <Button label="Create Task" outlined icon="pi pi-plus"></Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              label="Get Next Task"
+              outlined
+              icon="pi pi-chevron-circle-down"
+            ></Button>
+            <Button label="Pick Task" outlined icon="pi pi-file"></Button>
+          </div>
         </div>
         <DataTable
           showGridlines
@@ -208,8 +248,6 @@ const MyTasksPage = () => {
             field="status"
             header="Status"
             body={renderStatus}
-            editor={statusEditor}
-            onCellEditComplete={updateStatusHandler}
           ></Column>
           <Column field="action" body={renderActionCell}></Column>
         </DataTable>
