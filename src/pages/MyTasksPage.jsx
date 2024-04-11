@@ -140,7 +140,7 @@ const MyTasksPage = () => {
 
   const renderActionCell = ({ id: taskId, status: taskStatus }) => {
     return (
-      <div className="flex">
+      <div className="flex justify-center items-center">
         {taskStatus.toLowerCase() === "active" && (
           <Button
             tooltip="Pause Task"
@@ -148,7 +148,6 @@ const MyTasksPage = () => {
               position: "left",
             }}
             onClick={() => pauseTaskHandler(taskId)}
-            className="block m-auto"
             severity="warning"
             outlined
             rounded
@@ -164,7 +163,6 @@ const MyTasksPage = () => {
               position: "left",
             }}
             onClick={() => resumeTaskHandler(taskId)}
-            className="block m-auto"
             severity="success"
             outlined
             rounded
@@ -179,10 +177,10 @@ const MyTasksPage = () => {
             position: "left",
           }}
           onClick={() => loadAuditTrail(taskId)}
-          className="block m-auto"
           severity="secondary"
           outlined
           rounded
+          size="small"
           text
           icon="pi pi-history"
         />
@@ -207,8 +205,8 @@ const MyTasksPage = () => {
           </div>
         </div>
         <DataTable
+          className="bg-red-500"
           showGridlines
-          resizableColumns
           paginator
           rows={10}
           value={tasks}
