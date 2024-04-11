@@ -138,6 +138,28 @@ const MyTasksPage = () => {
     rowData[field] = newValue;
   };
 
+  const loadAuditTrail = (taskId) => {
+    alert(taskId);
+  };
+
+  const renderActionCell = ({ id: taskId }) => {
+    return (
+      <Button
+        tooltip="Audit Trail"
+        tooltipOptions={{
+          position: "left",
+        }}
+        onClick={() => loadAuditTrail(taskId)}
+        className="block m-auto"
+        severity="secondary"
+        outlined
+        rounded
+        text
+        icon="pi pi-history"
+      />
+    );
+  };
+
   return (
     <>
       <Authorized>
@@ -148,8 +170,7 @@ const MyTasksPage = () => {
           showGridlines
           resizableColumns
           paginator
-          rows={5}
-          rowsPerPageOptions={[5, 10, 25, 50, 100]}
+          rows={10}
           value={tasks}
           size="small"
           sortMode="multiple"
@@ -190,6 +211,7 @@ const MyTasksPage = () => {
             editor={statusEditor}
             onCellEditComplete={updateStatusHandler}
           ></Column>
+          <Column field="action" body={renderActionCell}></Column>
         </DataTable>
       </Authorized>
     </>
