@@ -161,13 +161,17 @@ const DashboardPage = () => {
               <h1 className="text-slate-700 text-lg font-semibold">
                 Task Completion Rate
               </h1>
-              <Dropdown
-                className="w-48"
-                value={selectedTaskBreakdownType}
-                onChange={(event) => setSelectedTaskBreakdownType(event.value)}
-                options={["Priority", "Status"]}
-                placeholder="Select the task breakdown rate"
-              />
+              <div className="flex justify-end">
+                <Dropdown
+                  className="w-48"
+                  value={selectedTaskBreakdownType}
+                  onChange={(event) =>
+                    setSelectedTaskBreakdownType(event.value)
+                  }
+                  options={["Priority", "Status"]}
+                  placeholder="Select the task breakdown rate"
+                />
+              </div>
             </div>
             <div className="self-center">
               <Chart
